@@ -1,0 +1,37 @@
+#create a connection between the start button, click me button, score button, instruction
+
+#let all variables exist
+#variables such as score,highscore,GameState,ButtonColor
+
+
+#if game state = false:
+    #instruction sheet say "Press Start"
+
+
+#def handleStartClick
+    #if GameState === false:
+        #GameState = True
+        #instruction sheet say press the button when its red
+
+    #if GameState === true:
+        #remind player that its on
+        #instruction sheet say "follow instruction"
+
+#def handleClickerClick
+    #if GameState === true:
+        #turn ButtonColor red every 10 seconds
+        
+        #if ButtonColor === red & player click the button:
+            #score++
+            #display the updated score
+            #instruction say "Good Job!" for 2 seconds
+
+        #if ButtonColor !== red & player click the button:
+            #instruction say "You LOST" for 2 seconds
+            #update highscore, display highscore 
+            #game refresh
+
+#game refresh
+    #GameState = false
+    #score = 0
+
