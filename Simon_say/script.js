@@ -1,8 +1,11 @@
 const start = document.querySelector('#start');
 start.addEventListener("click", handleStartClick);
 
-const clicker = document.querySelector('.clicker');
-clicker.addEventListener("click", handleClickerClick);
+const clicker = document.querySelectorAll('.clicker');
+// Add an EventListener to all buttons and use a foreach 
+clicker.forEach((button)=>{
+button.addEventListener("click", handleClickerClick)
+});
 
 const scoreDisplay = document.querySelector("#score");
 
@@ -12,21 +15,60 @@ let score = 0;
 let highscore = 0;
 let GameState = false;
 let ButtonColor = false;
+let timeoutID = null;
 
-function ButtonColorFunc() {
-        clicker.classList.toggle("active");
-        ButtonColor = !ButtonColor; // flips the button true/false
+function TimeRandom(min,max) {
+    return Math.random() * (max - min) + min;
+};
+
+
+// Remove the red color from all buttons
+function clearButtons(){
+    clicker.forEach((button)=>{
+        button.classList.remove("active")
+    })
+};
+
+
+//this only activate one button when there is multiple buttons causing error
+    //need to use array to call 1 random button among the 3 buttons to activate
+
+function ButtonColorFunc(){
+    clearButtons();
+
+    const RandomChoice = Math.floor(Math.random * clicker.length) + 1;
+    const chosenButton = clicker[RandomChoice]
+    chosenButton.classList.toggle("active");
+
+    ButtonColor = !ButtonColor; // flips the button true/false
 }
 
 
+
+function startColorLoop() {
+   const randomTime = TimeRandom(3000, 10000);
+   timeoutID = setTimeout(()=>{
+    if (!GameState) return;
+
+    ButtonColorFunc();
+    startColorLoop();
+   }, randomTime);
+} 
 
 function handleStartClick() {
     if (GameState === false) {
         GameState = true;
         score = 0;
+        ButtonColor = false;
+
+        // why remove active from clicker when active is not assigned in the first place during start
+        clicker.classList.remove("active") 
+
         scoreDisplay.textContent= score;
         console.log(`starting!`);
-        InstructionDisplay.textContent = "Press the Button when its red!"
+        InstructionDisplay.textContent = "Press the Button when its red!";
+        startColorLoop()
+        // setInterval(ButtonColorFunc, TimeRandom(3000,10000));
     }
     else {
         console.log(`Game is already turned ON!`)
@@ -53,46 +95,8 @@ function handleClickerClick() {
         }
         GameState = false;
 
-        clearInterval(intervalID);
+        clearTimeout(timeoutID);
 
         InstructionDisplay.textContent = "Game Over! Press Start again to play again!"
     }
-
-
-
-
-
-
-
-
-
 }
-    //{     if (GameState === true) {
-//         setInterval(ButtonColorFunc, 3000)
-
-//         if (ButtonColor === true & handleClickerClick()) {
-//             score++;
-//             scoreDisplay.textContent = score;
-//             console.log(`Click ${score}`);
-            
-//         }
-
-//         if (ButtonColor === false & handleClickerClick()) {
-//             for (let i = 0; i < 3; i++) {
-//                 InstructionDisplay.textContent = "You lost";
-//         }
-//             highscore = score;
-//             console.log(`Higscore is ${highscore}`);
-//             GameState = false
-//              InstructionDisplay.textContent = "Press the Start Button!"
-
-//         }
-
-
-
-//     }
-//     else {
-//         console.log('Game has not turned on yet!')
-//     }
-
-// }

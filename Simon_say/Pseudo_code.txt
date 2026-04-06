@@ -1,17 +1,35 @@
-#create a connection between the start button, click me button, score button, instruction
+#create a connection between the start button, click me button (1, 2, 3, 4), score button, instruction
 
 #let all variables exist
 #variables such as score,highscore,GameState,ButtonColor
 
+#function TimeRandom(min,max):
+    # random number * (max-min) + min;
 
-#if game state = false:
-    #instruction sheet say "Press Start"
+#for each button in clicker addEventListener for click and handleClickerClick
 
+#function clearbuttons
+    #for each button in clicker remove active
+
+#def buttonColorFunc
+    #toggle clicker class as active on and off
+
+#def startColorLoop
+    #Create TimeRandom
+    #exectures setTimeout (execture a function asfter time delay)
+        - Execute this function
+            - if not in game state, return
+            - ButtonColorFunc(toggle clicker class on/off)
+            - executes startcolor loop again
+        - every TimeRandom
 
 #def handleStartClick
     #if GameState === false:
         #GameState = True
+        #reset everything
+        #remove active from clicker if any
         #instruction sheet say press the button when its red
+        #startColorLoop executed
 
     #if GameState === true:
         #remind player that its on
@@ -19,19 +37,15 @@
 
 #def handleClickerClick
     #if GameState === true:
-        #turn ButtonColor red every 10 seconds
+        #add score
+        #display score
+        #instruction say good job
         
-        #if ButtonColor === red & player click the button:
-            #score++
-            #display the updated score
-            #instruction say "Good Job!" for 2 seconds
-
-        #if ButtonColor !== red & player click the button:
-            #instruction say "You LOST" for 2 seconds
-            #update highscore, display highscore 
-            #game refresh
-
-#game refresh
-    #GameState = false
-    #score = 0
-
+        #else:
+        #say you lost
+        #if score > highscore:
+            #replace
+        #game state = false
+        #reset game
+        #clear timeoutID
+        #display "Game over! Press start to play again"
