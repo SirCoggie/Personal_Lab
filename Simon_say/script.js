@@ -16,6 +16,8 @@ let highscore = 0;
 let GameState = false;
 let ButtonColor = false;
 let timeoutID = null;
+let correctButton = null;
+
 
 function TimeRandom(min,max) {
     return Math.random() * (max - min) + min;
@@ -36,17 +38,18 @@ function clearButtons(){
 function ButtonColorFunc(){
     clearButtons();
 
-    const RandomChoice = Math.floor(Math.random * clicker.length) + 1;
-    const chosenButton = clicker[RandomChoice]
-    chosenButton.classList.toggle("active");
+    const RandomChoice = Math.floor(Math.random() * clicker.length);
+    const chosenButton = clicker[RandomChoice];
+    correctButton = chosenButton
+    chosenButton.classList.add("active");
 
-    ButtonColor = !ButtonColor; // flips the button true/false
+    ButtonColor = true; // flips the button true/false
 }
 
 
 
 function startColorLoop() {
-   const randomTime = TimeRandom(3000, 10000);
+   const randomTime = TimeRandom(3000, 4000);
    timeoutID = setTimeout(()=>{
     if (!GameState) return;
 
@@ -61,9 +64,6 @@ function handleStartClick() {
         score = 0;
         ButtonColor = false;
 
-        // why remove active from clicker when active is not assigned in the first place during start
-        clicker.classList.remove("active") 
-
         scoreDisplay.textContent= score;
         console.log(`starting!`);
         InstructionDisplay.textContent = "Press the Button when its red!";
@@ -73,19 +73,25 @@ function handleStartClick() {
     else {
         console.log(`Game is already turned ON!`)
         InstructionDisplay.textContent = "Its the 'Click Me' button you have to press!"
+        score = 0;
+        scoreDisplay.textContent = score;
     }
 }
 
-function handleClickerClick() {
+function handleClickerClick(event) {
+    const clickedButton = event.target;
     if (!GameState) {
         console.log("Game not started!");
         return;
     }
 
-    if (ButtonColor === true) {
+    if (clickedButton === correctButton) {
         score++;
         scoreDisplay.textContent = score;
         InstructionDisplay.textContent = "Good Job!";
+        clearTimeout(timeoutID);
+        ButtonColorFunc();
+        startColorLoop();
     } else {
         InstructionDisplay.textContent = "You Lost!";
 

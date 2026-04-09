@@ -14,7 +14,9 @@ button {
 }
 
 #start {
-    transform: translateY(-60px);
+    padding: 10px 30px;
+    transform: translateY(-300px);
+    font-size: 24px;
 }
 
 /* .clicker {
