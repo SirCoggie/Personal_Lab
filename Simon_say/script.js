@@ -11,13 +11,33 @@ const scoreDisplay = document.querySelector("#score");
 
 const InstructionDisplay = document.querySelector("#instruction");
 
+const timer = document.getElementById("timer");
+
 let score = 0;
+
 let highscore = 0;
 let GameState = false;
 let ButtonColor = false;
 let timeoutID = null;
 let correctButton = null;
+let totalSeconds = 90;
+let interval;
 
+function updateTimerDisplay() {
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = totalSeconds % 60;
+
+    if (minutes<10) {
+        minutes = "0" + minutes;
+    }
+
+
+    if (seconds<10) {
+        seconds = "0" + seconds;
+    }
+
+    timer.textContent = `${minutes}:${seconds}`;
+}
 
 function TimeRandom(min,max) {
     return Math.random() * (max - min) + min;
@@ -63,11 +83,30 @@ function handleStartClick() {
         GameState = true;
         score = 0;
         ButtonColor = false;
+        totalSeconds = 90;
+        updateTimerDisplay();
+        clearInterval(interval);
 
+
+        interval = setInterval(()=>{
+            totalSeconds--;
+            updateTimerDisplay();
+            if(totalSeconds <= 0) {
+                clearInterval(interval);
+                timer.textContent = "Time's up!";
+
+                GameState = false;
+                clearTimeout(timeoutID);
+
+                InstructionDisplay.textContent = `Good Job! Your final score is ${score}!`;
+            }
+        }, 1000);
+        
         scoreDisplay.textContent= score;
         console.log(`starting!`);
         InstructionDisplay.textContent = "Press the Button when its red!";
         startColorLoop()
+        
         // setInterval(ButtonColorFunc, TimeRandom(3000,10000));
     }
     else {
@@ -84,25 +123,34 @@ function handleClickerClick(event) {
         console.log("Game not started!");
         return;
     }
+if (totalSeconds > 0) {
+        if (clickedButton === correctButton) {
+            score++;
+            scoreDisplay.textContent = score;
+            InstructionDisplay.textContent = "Good Job!";
+            clearTimeout(timeoutID);
+            ButtonColorFunc();
+            startColorLoop();
+        } else {
+            InstructionDisplay.textContent = "You Lost!";
 
-    if (clickedButton === correctButton) {
-        score++;
-        scoreDisplay.textContent = score;
-        InstructionDisplay.textContent = "Good Job!";
-        clearTimeout(timeoutID);
-        ButtonColorFunc();
-        startColorLoop();
-    } else {
-        InstructionDisplay.textContent = "You Lost!";
+            if (score > highscore) {
+                highscore = score;
+                console.log(`New Highscore: ${highscore}`)
+            }
+            GameState = false;
 
-        if (score > highscore) {
-            highscore = score;
-            console.log(`New Highscore: ${highscore}`)
+            clearTimeout(timeoutID);
+
+            InstructionDisplay.textContent = "Game Over! Press Start again to play again!"
         }
-        GameState = false;
-
-        clearTimeout(timeoutID);
-
-        InstructionDisplay.textContent = "Game Over! Press Start again to play again!"
     }
+else {
+    scoreDisplay.textContent = score;
+     if (score > highscore) {
+                highscore = score;
+                console.log(`New Highscore: ${highscore}`)
+            }
+
+}
 }

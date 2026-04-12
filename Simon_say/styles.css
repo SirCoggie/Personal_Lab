@@ -40,3 +40,8 @@ p:nth-of-type(2) {
 .active {
     background-color: red;
 }
+
+#timer {
+    transform: translateY(-500px);
+    background-color: blueviolet;
+}
